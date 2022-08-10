@@ -1,0 +1,9 @@
+Node Value: 5, Occurrences: 2
+Node Value: 3, Occurrences: 1
+Node Value: 2, Occurrences: 2
+Node Value: 1, Occurrences: 4
+Node Value: 4, Occurrences: 1
+Node Value: 6, Occurrences: 2
+Node Value: 9, Occurrences: 1
+Node Value: 7, Occurrences: 1
+Node Value: 8, Occurrences: 1

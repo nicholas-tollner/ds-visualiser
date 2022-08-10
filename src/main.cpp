@@ -3,11 +3,12 @@
 //
 
 #include <iostream>
+#include <fstream>
 
 struct node
 {
     int value = 0;
-    unsigned int numCount = 0;
+    unsigned int numCount = 1;
     unsigned int leftCount = 0;
     unsigned int rightCount = 0;
     node* left = nullptr;
@@ -16,36 +17,32 @@ struct node
 };
 
 // Declarations
-void add(node* root, int val);
+void add(node *root, int val);
+node* build(std::ifstream &file);
+void print(node *tree, std::ofstream &file);
 
 int main()
 {
-    node *root = new node;
+    std::ofstream outfile("resources/output.txt");
+    std::ifstream infile("resources/input.txt");
 
     std::cout << "Binary Search Tree Example" << std::endl;
 
-    // Define root node value
-    root->value = 32;
-    int arr[] = {3,8,9,1,56,78,1,4,10,90, 3, 56, 32, 10, 90, 90, 90, 1, 3};
+    node *treeOne = build(infile);
 
-    for (int num : arr)
-    {
-        std::cout << "Adding : " << num << std::endl;
-        add(root, num);
-    }
-
+    print(treeOne, outfile);
 
     return 0;
 }
 
 // Definitions
-void add(node* root, int val)
+void add(node *root, int val)
 {
     if (val > root->value)
     {
         root->rightCount++;
 
-        std::cout << "val: " << val << " > root->value: " << root->value << std::endl;
+        std::cout << "val: " << val << " > node->value: " << root->value << std::endl;
 
         if (root->right == nullptr)
         {
@@ -57,12 +54,11 @@ void add(node* root, int val)
         {
             add(root->right, val);
         }
-
     }
     else if (val < root->value)
     {
         root->leftCount++;
-        std::cout << "val: " << val << " < root->value: " << root->value << std::endl;
+        std::cout << "val: " << val << " < node->value: " << root->value << std::endl;
 
         if (root->left == nullptr)
         {
@@ -80,7 +76,52 @@ void add(node* root, int val)
         root->numCount++;
         std::cout << "Incrementing numCount: " << root->numCount << std::endl;
     }
-    return;
 }
+
+node* build(std::ifstream &file)
+{
+    std::string line;
+    node *root = new node;
+    bool start = true;
+    try
+    {
+        while(std::getline(file, line))
+        {
+            if (start)
+            {
+                // Setup root node
+                root->value = std::stoi(line);
+                start = false;
+            }
+            else
+            {
+                // Build tree
+                add(root, std::stoi(line));
+            }
+        }
+    } catch (std::invalid_argument const &e)
+    {
+        std::cout << "Error: cannot parse " << line << " to int " << std::endl;
+    }
+
+    return root;
+}
+
+void print(node* tree, std::ofstream &file)
+{
+    // Print Left first
+    file << "Node Value: " << tree->value << ", Occurrences: " << tree->numCount << std::endl;
+    if(tree->left != nullptr)
+    {
+        print(tree->left, file);
+    }
+
+    if(tree->right != nullptr)
+    {
+        print(tree->right, file);
+    }
+}
+
+
 
 
